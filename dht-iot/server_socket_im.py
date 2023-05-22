@@ -14,7 +14,8 @@ file_name = f"temp.txt"
 def receive_data() -> str:
     msg ,_ = server_sock.recvfrom(1000)
     print("Message received!")
-    time, temp, hum = msg.split(',')
+    print(msg)
+    time, temp, hum = msg.decode().split(',')
     print(f" Time: {time} || Temp: {temp} °C || Humidity: {hum} % ")
     return msg.decode()
 

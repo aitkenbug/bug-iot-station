@@ -34,7 +34,7 @@ with open(file_name, "w") as f:
         try:
             data = get_sensor_data()
             csv_writer.writerow(data)
-            string_data = '{0},{1:0.1f},{2:0.1f},'.format(data[0],data[1],data[2])
+            string_data = '{0},{1:0.1f},{2:0.1f}'.format(data[0],data[1],data[2])
             send_data_with_timeout(string_data, address)
 
         except KeyboardInterrupt:
