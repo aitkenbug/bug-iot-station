@@ -1,6 +1,6 @@
 import socket
 import csv
-address = ('...preguntar vicho', 8000)
+address = ('192.168.192.130', 8000)
 
 server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_sock.bind(address)

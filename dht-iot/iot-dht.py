@@ -16,9 +16,9 @@ def get_sensor_data():
     now = datetime.now()
     now = now.strftime("%Y%m%dT%H%M%S")
     humidity, temperature = Adafruit_DHT.read_retry(11,18)
-    data = 'Time: {0} Temp: {1:0.1f} C  Humidity: {2:0.1f} %'.format(now, temperature, humidity)
     return now, temperature, humidity
 
+address = ('192.168.192.130', 8000)
 now = datetime.now().strftime('%Y%m%dT%H%M')
 file_name = f"log-data-{now}.csv"
 WELCOME_STR = f"""
@@ -34,9 +34,8 @@ with open(file_name, "w") as f:
         try:
             data = get_sensor_data()
             csv_writer.writerow(data)
+            string_data = 'Time: {0} Temp: {1:0.1f} C  Humidity: {2:0.1f} %'.format(data[0],data[1],data[2])
             send_data_with_timeout(string_data, address)
-          # string_data = 'Time: {0} Temp: {1:0.1f} C  Humidity: {2:0.1f} %'.format(data[0],data[1],data[2])
-           # print(string_data)
         except KeyboardInterrupt:
             print(f"Programa interrupido! ver {file_name} para los resultados")
             break
