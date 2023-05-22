@@ -11,14 +11,15 @@ client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 def send_data_with_timeout(data: str, address: tuple[str, int]):
     client_socket.sendto(data.encode(), address)
-    
+
 def get_sensor_data():
     now = datetime.now()
     now = now.strftime("%Y%m%dT%H%M%S")
     humidity, temperature = Adafruit_DHT.read_retry(11,18)
     return now, temperature, humidity
 
-address = ('192.168.192.130', 8000)
+
+address = ('192.168.192.66', 8000)
 now = datetime.now().strftime('%Y%m%dT%H%M')
 file_name = f"log-data-{now}.csv"
 WELCOME_STR = f"""
