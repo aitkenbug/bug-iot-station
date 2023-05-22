@@ -17,7 +17,7 @@ def receive_data() -> str:
     print(msg)
     return msg.decode()
 
-with open(file_name, "rw") as fd:
+with open(file_name, "w") as fd:
     while True:
         msg = receive_data()
         print("Writing data")
