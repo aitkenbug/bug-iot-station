@@ -6,7 +6,12 @@ from zoneinfo import ZoneInfo
 import csv
 import socket
 
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
+
+def send_data_with_timeout(data: str, address: tuple[str, int]):
+    client_socket.sendto(data.encode(), address)
+    
 def get_sensor_data():
     now = datetime.now()
     now = now.strftime("%Y%m%dT%H%M%S")
@@ -29,9 +34,9 @@ with open(file_name, "w") as f:
         try:
             data = get_sensor_data()
             csv_writer.writerow(data)
-            string_data = 'Time: {0} Temp: {1:0.1f} C  Humidity: {2:0.1f} %'.format(data[0],data[1],data[2])
-            print(string_data)
+            send_data_with_timeout(string_data, address)
+          # string_data = 'Time: {0} Temp: {1:0.1f} C  Humidity: {2:0.1f} %'.format(data[0],data[1],data[2])
+           # print(string_data)
         except KeyboardInterrupt:
-           print(f"Programa interrupido! ver {file_name} para los resultados")
-           break
-    #send_data(string_data, address)
+            print(f"Programa interrupido! ver {file_name} para los resultados")
+            break
