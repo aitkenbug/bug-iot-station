@@ -11,7 +11,7 @@ client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 address = ('192.168.192.66', 8000)
 now = datetime.now().strftime('%Y%m%dT%H%M')
-file_name = f"/var/www/html/dht_data.csv"
+file_name = f"/var/www/html/dht_data_seconds.csv"
 
 
 def send_data_with_timeout(data: str, address: tuple[str, int]):
