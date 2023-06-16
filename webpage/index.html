@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Visualización de datos </title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+  #myHeader {
+        background-color: lightblue;
+        color: black;
+        padding: 40px;
+        text-align: center;
+        }
+</style>
+</head>
+<body>
+  <h1 id="myHeader">Datos Sensor DHT11</h1>
+  <canvas id="myChart" width=”150″ height=”150″></canvas>
+  <script>
+    // Función para leer el archivo CSV
+    function leerCSV(file) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          procesarCSV(this.responseText);
+        }
+      };
+      xhttp.open("GET", file, true);
+      xhttp.send();
+    }
+
+    // Función para procesar los datos CSV
+    function procesarCSV(csv) {
+      var lineas = csv.split("\n");
+      var datos = [];
+
+      for (var i = 0; i < lineas.length; i++) {
+        var linea = lineas[i].split(",");
+        datos.push(linea);
+      }
+
+      var etiquetas = datos.shift(); // Extrae la primera fila como etiquetas y la remueve de los datos
+    
+      graficarDatos(etiquetas, datos);
+    }
+
+  
+
+
+    // Función para graficar los datos
+    function graficarDatos(etiquetas, datos) {
+      var etiquetasEjeX = [];
+      var dataset1 = {
+        label: 'Temperatura' + ' (°C)' ,
+        data: [],
+        lineTension: 0.1,
+        backgroundColor: "rgba(255, 0, 0, 0.8)",
+        borderColor: "rgba(255, 0, 0, 0.8)",
+        pointHoverBackgroundColor: "rgba(236, 255, 0, 0.8)",
+        pointHoverBorderColor: "rgba(236, 255, 0, 0.8)",
+        fill: false,
+        yAxisID: 'y-axis'
+      };
+      var dataset2 = {
+        label: 'Humedad' + ' (RH%)',
+        lineTension: 0.1,
+        backgroundColor: "rgba(0, 0, 255, 0.8)",
+        borderColor: "rgba(0, 0, 255, 0.8)",
+        pointHoverBackgroundColor: "rgba(236, 255, 0, 0.8)",
+        pointHoverBorderColor: "rgba(236, 255, 0, 0.8)",
+        fill: false,
+        yAxisID: 'y-axis'
+      };
+
+      for (var i = 0; i < datos.length; i++) {
+        var fila = datos[i];
+        etiquetasEjeX.push(fila[0]);
+        dataset1.data.push(parseFloat(fila[1]));
+        dataset2.data.push(parseFloat(fila[2]));
+      }
+      
+      // Obtener el último dato del dataset1
+      var last1 = dataset1.data[dataset1.data.length-2 ];
+
+      // Obtener el último dato del dataset2
+      var last2 = dataset2.data[dataset2.data.length-2 ];
+
+
+      var ctx = document.getElementById('myChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: etiquetasEjeX,
+          datasets: [dataset1, dataset2]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              id: 'y-axis'
+            }
+          }
+        }
+      });
+      // Mostrar tabla con los últimos datos
+      var tabla = document.createElement('table');
+      tabla.innerHTML = `
+        <tr>
+          <th>Propiedad</th>
+          <th>Último Dato</th>
+        </tr>
+        <tr>
+          <td>${'Temperatura'}</td>
+          <td>${last1+'°C'}</td>
+        </tr>
+        <tr>
+          <td>${'Humedad'}</td>
+          <td>${last2+'RH%'}</td>
+        </tr>
+        `;
+        document.body.appendChild(tabla);
+
+    }
+
+    // Llamada a la función para leer el archivo CSV
+    leerCSV('dht_data_seconds.csv');
+    
+    
+    
+  </script>
+</body>
+</html>
